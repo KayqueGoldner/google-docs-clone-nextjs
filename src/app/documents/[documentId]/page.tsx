@@ -1,3 +1,5 @@
+import { Editor } from "./editor";
+
 const DocumentIdPage = async ({
   params,
 }: {
@@ -5,7 +7,11 @@ const DocumentIdPage = async ({
 }) => {
   const { documentId } = await params;
 
-  return <div>document id: {documentId}</div>;
+  return (
+    <div className="min-h-screen bg-[#FAFBFD]">
+      <Editor />
+    </div>
+  );
 };
 
 export default DocumentIdPage;
