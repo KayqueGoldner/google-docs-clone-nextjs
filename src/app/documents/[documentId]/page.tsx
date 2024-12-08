@@ -1,3 +1,4 @@
+import { Toolbar } from "./toolbar";
 import { Editor } from "./editor";
 
 const DocumentIdPage = async ({
@@ -9,6 +10,7 @@ const DocumentIdPage = async ({
 
   return (
     <div className="min-h-screen bg-[#FAFBFD]">
+      <Toolbar />
       <Editor />
     </div>
   );
