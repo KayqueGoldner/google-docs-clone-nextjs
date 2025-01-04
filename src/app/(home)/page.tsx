@@ -2,7 +2,7 @@
 
 import { usePaginatedQuery } from "convex/react";
 
-import { FullScreenLoader } from "@/components/full-screen-loader";
+import { useSearchParam } from "@/hooks/use-search-param";
 
 import { api } from "../../../convex/_generated/api";
 import { Navbar } from "./navbar";
@@ -10,9 +10,10 @@ import { TemplatesGallery } from "./templates-gallery";
 import { DocumentsTable } from "./documents-table";
 
 const Home = () => {
+  const [search] = useSearchParam();
   const { results, status, loadMore } = usePaginatedQuery(
     api.documents.get,
-    {},
+    { search },
     { initialNumItems: 5 },
   );
 
