@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMutation } from "convex/react";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -39,7 +40,18 @@ export const RenameDialog = ({
     setIsUpdating(true);
 
     update({ id: documentId, title: title.trim() || "Untitled" })
-      .then(() => setOpen(false))
+      .then(() => {
+        setOpen(false);
+        toast.success("Document updated");
+      })
+      .catch(() =>
+        toast.error(
+          "Failed to rename document. Ensure that you are the owner of the document, or if it's part of an organization, that you are an admin.",
+          {
+            duration: 5000,
+          },
+        ),
+      )
       .finally(() => setIsUpdating(false));
   };
 
