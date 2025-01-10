@@ -17,15 +17,18 @@ import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
+import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 
 import { useEditorStore } from "@/store/use-editor-store";
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
 
 import { Ruler } from "./ruler";
+import { Threads } from "./threads";
 
 export const Editor = () => {
   const { setEditor } = useEditorStore();
+  const liveBlocks = useLiveblocksExtension();
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -61,7 +64,10 @@ export const Editor = () => {
       },
     },
     extensions: [
-      StarterKit,
+      liveBlocks,
+      StarterKit.configure({
+        history: false,
+      }),
       FontSizeExtension,
       LineHeightExtension,
       Link.configure({
@@ -95,6 +101,7 @@ export const Editor = () => {
       <Ruler />
       <div className="mx-auto flex w-[816px] min-w-max justify-center py-4 print:w-full print:min-w-0 print:py-0">
         <EditorContent editor={editor} />
+        <Threads editor={editor} />
       </div>
     </div>
   );
