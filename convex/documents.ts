@@ -78,6 +78,13 @@ export const get = query({
   },
 });
 
+export const getById = query({
+  args: { id: v.id("documents") },
+  handler: async (ctx, { id }) => {
+    return await ctx.db.get(id);
+  },
+});
+
 export const removeById = mutation({
   args: { id: v.id("documents") },
   handler: async (ctx, args) => {
@@ -94,14 +101,16 @@ export const removeById = mutation({
     }
 
     const isOwner = document.ownerId === user.subject;
-    const organizationId = (user.organization_id ?? undefined) as
-      | string
-      | undefined;
-    const organizationRole = (user.organization_role ?? undefined) as
-      | string
-      | undefined;
+    const organizationId = user.organization_id ?? undefined;
+    const organizationRole = user.organization_role ?? undefined;
 
-    if (!isOwner && organizationId && organizationRole !== "org:admin") {
+    // Ensures that only the document owner or the organization admin can remove it
+    if (
+      !isOwner && // Not the owner
+      (!document.organizationId || // No organization associated
+        organizationId !== document.organizationId || // Organization mismatch
+        organizationRole !== "org:admin") // Not an admin
+    ) {
       throw new ConvexError("Unauthorized");
     }
 
@@ -125,14 +134,16 @@ export const updateById = mutation({
     }
 
     const isOwner = document.ownerId === user.subject;
-    const organizationId = (user.organization_id ?? undefined) as
-      | string
-      | undefined;
-    const organizationRole = (user.organization_role ?? undefined) as
-      | string
-      | undefined;
+    const organizationId = user.organization_id ?? undefined;
+    const organizationRole = user.organization_role ?? undefined;
 
-    if (!isOwner && organizationId && organizationRole !== "org:admin") {
+    // Ensures that only the document owner or the organization admin can update it
+    if (
+      !isOwner && // Not the owner
+      (!document.organizationId || // No organization associated
+        organizationId !== document.organizationId || // Organization mismatch
+        organizationRole !== "org:admin") // Not an admin
+    ) {
       throw new ConvexError("Unauthorized");
     }
 
