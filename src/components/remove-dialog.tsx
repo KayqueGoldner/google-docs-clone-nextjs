@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMutation } from "convex/react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import {
@@ -25,6 +26,7 @@ interface RemoveDialogProps {
 }
 
 export const RemoveDialog = ({ children, documentId }: RemoveDialogProps) => {
+  const router = useRouter();
   const remove = useMutation(api.documents.removeById);
   const [isRemoving, setIsRemoving] = useState(false);
 
@@ -49,7 +51,10 @@ export const RemoveDialog = ({ children, documentId }: RemoveDialogProps) => {
               e.stopPropagation();
               setIsRemoving(true);
               remove({ id: documentId })
-                .then(() => toast.success("Document removed"))
+                .then(() => {
+                  toast.success("Document removed");
+                  router.push("/");
+                })
                 .catch(() =>
                   toast.error(
                     "Failed to delete document. Ensure that you are the owner of the document, or if it's part of an organization, that you are an admin.",
